@@ -8,6 +8,7 @@ import FinalReport from './components/FinalReport';
 // phase: 'setup' | 'interviewing' | 'ended'
 export default function App() {
   const [phase, setPhase] = useState('setup');
+  const [exitingSetup, setExitingSetup] = useState(false);
   const [role, setRole] = useState('');
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -29,8 +30,13 @@ export default function App() {
       const ai = data.ai;
       const text = [ai.interviewer_message, ai.next_question].filter(Boolean).join('\n\n');
       setMessages([{ role: 'assistant', text }]);
+      // Play exit animation before switching phase
+      setExitingSetup(true);
+      await new Promise((r) => setTimeout(r, 320));
       setPhase('interviewing');
+      setExitingSetup(false);
     } catch (e) {
+      setExitingSetup(false);
       setError(e.message);
     } finally {
       setLoading(false);
@@ -95,11 +101,15 @@ export default function App() {
   }
 
   if (phase === 'setup') {
-    return <RoleSelector onStart={handleStart} loading={loading} />;
+    return (
+      <div className={exitingSetup ? 'animate-exit' : ''}>
+        <RoleSelector onStart={handleStart} loading={loading} />
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white text-gray-900">
+    <div className="animate-chat-enter flex flex-col h-screen bg-white text-gray-900">
       {error && (
         <div className="bg-red-50 border-b border-red-200 text-red-700 text-sm px-4 py-2 text-center">
           {error}
