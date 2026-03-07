@@ -30,8 +30,55 @@
   background-color: #FF9900;
 }
 
+.role-btn:hover:not(:disabled) {
+  background-color: #FF9900;
+  border-color: #FF9900;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+}
+
+/* ── Entrance animation ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.animate-fade-slide-up {
+  animation: fadeSlideUp 0.55s ease-out both;
+}
+
+/* ── Background orb floats ── */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0,   0);   }
+  33%       { transform: translate(-22px, 28px); }
+  66%       { transform: translate(18px, -18px); }
+}
+
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0,   0);   }
+  40%       { transform: translate(25px, -30px); }
+  80%       { transform: translate(-20px, 15px); }
+}
+
+@keyframes floatOrb3 {
+  0%, 100% { transform: translate(0,   0);   }
+  50%       { transform: translate(-18px, -22px); }
+}
+
+.orb-1 { animation: floatOrb1 16s ease-in-out infinite; transform-origin: center; }
+.orb-2 { animation: floatOrb2 20s ease-in-out infinite; transform-origin: center; }
+.orb-3 { animation: floatOrb3 12s ease-in-out infinite; transform-origin: center; }
+
+/* ── Icon heartbeat glow ── */
+@keyframes iconPulse {
+  0%, 100% { box-shadow: 0 8px 30px rgba(255, 153, 0, 0.35); }
+  50%       { box-shadow: 0 8px 48px rgba(255, 153, 0, 0.6);  }
+}
+
+.icon-pulse {
+  animation: iconPulse 3s ease-in-out infinite;
 }
