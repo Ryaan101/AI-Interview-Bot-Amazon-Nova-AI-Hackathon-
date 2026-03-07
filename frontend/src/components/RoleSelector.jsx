@@ -22,8 +22,8 @@ export default function RoleSelector({ onStart, loading }) {
               key={role}
               onClick={() => onStart(role)}
               disabled={loading}
-              className="bg-white border border-gray-200 text-gray-800 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed
-                         transition-colors duration-150 rounded-xl py-4 px-3 text-sm font-medium text-center shadow-sm"
+              className="bg-white border border-gray-200 text-gray-800 hover:text-white hover:border-[#FF9900] disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-colors duration-150 rounded-xl py-4 px-3 text-sm font-medium text-center shadow-sm btn-orange-hover"
             >
               {role}
             </button>

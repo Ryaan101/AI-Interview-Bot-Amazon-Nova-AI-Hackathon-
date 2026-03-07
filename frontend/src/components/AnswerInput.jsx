@@ -56,7 +56,7 @@ export default function AnswerInput({ onSubmit, onEnd, loading }) {
           placeholder="Type your answer… (Enter to send, Shift+Enter for new line)"
           rows={2}
           className="flex-1 resize-none bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 rounded-xl
-                     px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400
+                     px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF9900]
                      disabled:opacity-50"
         />
 

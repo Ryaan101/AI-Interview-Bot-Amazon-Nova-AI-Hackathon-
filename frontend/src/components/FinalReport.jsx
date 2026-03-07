@@ -7,7 +7,7 @@ function ScoreBar({ label, score }) {
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
-          className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
+          className="bg-[#FF9900] h-2 rounded-full transition-all duration-500"
           style={{ width: `${(score / 5) * 100}%` }}
         />
       </div>
@@ -20,7 +20,7 @@ function BulletList({ items }) {
     <ul className="space-y-1">
       {items.map((item, i) => (
         <li key={i} className="flex gap-2 text-sm text-gray-700">
-          <span className="text-indigo-400 mt-0.5">•</span>
+          <span className="text-[#FF9900] mt-0.5">•</span>
           <span>{item}</span>
         </li>
       ))}
@@ -41,7 +41,7 @@ export default function FinalReport({ report, role, onRestart }) {
 
         {overall_summary && (
           <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-5 shadow-sm">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-indigo-600 mb-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-[#FF9900] mb-2">
               Summary
             </h3>
             <p className="text-sm text-gray-700 leading-relaxed">{overall_summary}</p>
@@ -50,7 +50,7 @@ export default function FinalReport({ report, role, onRestart }) {
 
         {scores && (
           <div className="bg-white border border-gray-200 rounded-2xl p-5 mb-5 shadow-sm">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-indigo-600 mb-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-[#FF9900] mb-4">
               Scores
             </h3>
             {Object.entries(scores).map(([key, val]) => (
