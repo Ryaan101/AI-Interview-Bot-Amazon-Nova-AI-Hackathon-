@@ -90,9 +90,9 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-950 text-white">
+    <div className="flex flex-col h-screen bg-white text-gray-900">
       {error && (
-        <div className="bg-red-900 text-red-200 text-sm px-4 py-2 text-center">
+        <div className="bg-red-50 border-b border-red-200 text-red-700 text-sm px-4 py-2 text-center">
           {error}
         </div>
       )}

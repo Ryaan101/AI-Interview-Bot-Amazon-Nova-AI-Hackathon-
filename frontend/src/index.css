@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+.btn-orange {
+  background-color: #FF9900;
+  color: white;
+}
+.btn-orange:hover:not(:disabled) {
+  background-color: #e68a00;
+}
+.btn-orange:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 body {
   margin: 0;
   min-width: 320px;
