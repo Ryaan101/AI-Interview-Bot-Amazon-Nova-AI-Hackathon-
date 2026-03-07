@@ -13,6 +13,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
   const [error, setError] = useState(null);
 
   const addMessage = (role, text) =>
@@ -40,11 +41,18 @@ export default function App() {
     setError(null);
     addMessage('user', text);
     setLoading(true);
+    setTyping(true);
     try {
       const data = await submitTurn(sessionId, text);
       const replyText = [data.interviewer_message, data.next_question]
         .filter(Boolean)
         .join('\n\n');
+
+      // Hold the typing indicator for a random natural-feeling delay (800–2200ms)
+      const delay = 800 + Math.random() * 1400;
+      await new Promise((r) => setTimeout(r, delay));
+
+      setTyping(false);
       addMessage('assistant', replyText);
 
       if (data.end_interview) {
@@ -52,6 +60,7 @@ export default function App() {
         setPhase('ended');
       }
     } catch (e) {
+      setTyping(false);
       setError(e.message);
     } finally {
       setLoading(false);
@@ -96,7 +105,7 @@ export default function App() {
           {error}
         </div>
       )}
-      <ChatWindow messages={messages} role={role} />
+      <ChatWindow messages={messages} role={role} typing={typing} />
       <AnswerInput onSubmit={handleTurn} onEnd={handleEnd} loading={loading} />
     </div>
   );
