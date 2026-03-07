@@ -15,7 +15,7 @@ An AI-powered mock technical interview simulator built with **Amazon Nova** (via
 | Session Storage | In-memory (Python dict) |
 | Prompt System | Markdown files loaded at runtime |
 
-### Frontend *(planned)*
+### Frontend
 | Layer | Technology |
 |---|---|
 | Framework | React + Vite |
