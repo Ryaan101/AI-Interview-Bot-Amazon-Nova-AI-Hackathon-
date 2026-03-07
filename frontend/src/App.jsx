@@ -96,8 +96,17 @@ export default function App() {
     setError(null);
   };
 
+  const handleRestartSameRole = () => {
+    const currentRole = role;
+    setSessionId(null);
+    setMessages([]);
+    setFinalReport(null);
+    setError(null);
+    handleStart(currentRole);
+  };
+
   if (phase === 'ended') {
-    return <FinalReport report={finalReport} role={role} onRestart={handleRestart} />;
+    return <FinalReport report={finalReport} role={role} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
   }
 
   if (phase === 'setup') {
