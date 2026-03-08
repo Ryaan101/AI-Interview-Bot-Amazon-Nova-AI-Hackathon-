@@ -14,6 +14,7 @@ export default function App() {
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
+  const [conductTerminated, setConductTerminated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [typing, setTyping] = useState(false);
   const [error, setError] = useState(null);
@@ -66,6 +67,7 @@ export default function App() {
 
       if (data.end_interview) {
         setFinalReport(data.final_report);
+        setConductTerminated(!!data.conduct_terminated);
         setPhase('ended');
       }
     } catch (e) {
@@ -96,6 +98,7 @@ export default function App() {
     setSessionId(null);
     setMessages([]);
     setFinalReport(null);
+    setConductTerminated(false);
     setError(null);
   };
 
@@ -109,7 +112,7 @@ export default function App() {
   };
 
   if (phase === 'ended') {
-    return <FinalReport report={finalReport} role={role} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
+    return <FinalReport report={finalReport} role={role} conductTerminated={conductTerminated} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
   }
 
   if (phase === 'setup') {

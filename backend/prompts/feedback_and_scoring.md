@@ -95,3 +95,26 @@ Scores must align with written feedback.
 
 The final section must include: - 3--6 actionable next steps - Specific
 topics to review - Behavioral improvement suggestions
+
+------------------------------------------------------------------------
+
+## 19. Unusual Interaction Patterns in Final Report
+
+If any of the following flags appeared during the session, the final
+report must include an `unusual_patterns` section:
+
+-   `mocking` / `echoing_response`: Candidate echoed interviewer
+    responses, limiting evaluation for those turns.
+-   `incoherent_response`: One or more responses were unreadable or
+    non-answers.
+-   `profanity`: Candidate used inappropriate language during the
+    session. Note the number of occurrences.
+-   `hostile_behavior`: Candidate exhibited hostile or aggressive
+    language. Note the number of occurrences.
+-   `unusual_behavior`: Repeated disengagement or off-topic behavior.
+
+All entries must be factual and non-judgmental. If the session was
+terminated early due to conduct, state that clearly.
+
+If no unusual flags occurred, omit the `unusual_patterns` field or set
+it to null.

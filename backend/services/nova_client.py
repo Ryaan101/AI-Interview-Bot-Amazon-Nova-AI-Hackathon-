@@ -12,36 +12,29 @@ class NovaClient:
         self.client = boto3.client("bedrock-runtime", region_name=AWS_REGION)
         self.model_id = NOVA_MODEL_ID
 
-    def converse(self, system_text: str, user_text: str) -> str:
+    def converse(self, system_text: str, user_text: str = None, messages: list = None) -> str:
         """
-        Uses Bedrock 'converse' API when available (best), with a safe fallback.
+        Uses Bedrock 'converse' API.
+        Accepts either a simple user_text (single-turn) or a full messages list (multi-turn).
         Returns assistant text.
         """
-        # Preferred: Converse API
+        if messages is None:
+            messages = [{"role": "user", "content": [{"text": user_text}]}]
+
         if hasattr(self.client, "converse"):
             resp = self.client.converse(
                 modelId=self.model_id,
                 system=[{"text": system_text}],
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [{"text": user_text}],
-                    }
-                ],
+                messages=messages,
             )
-
-            # Typical Bedrock converse response shape:
-            # resp["output"]["message"]["content"][0]["text"]
             return resp["output"]["message"]["content"][0]["text"]
 
-        # Fallback (older SDKs): invoke_model (kept here for safety)
+        # Fallback (older SDKs): invoke_model
         import json
 
         body = {
             "system": [{"text": system_text}],
-            "messages": [
-                {"role": "user", "content": [{"text": user_text}]}
-            ],
+            "messages": messages,
         }
 
         resp = self.client.invoke_model(

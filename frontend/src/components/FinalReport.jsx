@@ -91,10 +91,72 @@ function BulletList({ items, accent }) {
   );
 }
 
-export default function FinalReport({ report, role, onRestart, onRestartSameRole }) {
-  if (!report) return null;
+export default function FinalReport({ report, role, conductTerminated, onRestart, onRestartSameRole }) {
+  if (!report && !conductTerminated) return null;
 
-  const { overall_summary, scores, strengths, improvements, practice_plan } = report;
+  // Conduct termination screen
+  if (conductTerminated) {
+    return (
+      <div
+        className="animate-chat-enter relative min-h-screen overflow-x-hidden text-gray-900 px-4 py-12"
+        style={{ background: 'linear-gradient(145deg, #FEFCF8 0%, #FFF8EE 45%, #F5F4FF 100%)' }}
+      >
+        <Background />
+        <div className="relative z-10 w-full max-w-2xl mx-auto">
+          <div className="flex flex-col items-center mb-10 animate-fade-slide-up" style={{ animationDelay: '0ms' }}>
+            <div
+              className="icon-pulse w-[64px] h-[64px] rounded-2xl flex items-center justify-center mb-5"
+              style={{ background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' }}
+            >
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none"
+                   stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-extrabold tracking-tight">Interview Ended Early</h2>
+            <p className="text-gray-500 text-sm mt-1">{role}</p>
+          </div>
+
+          <div
+            className="bg-red-50 border border-red-200 rounded-2xl px-6 py-5 mb-8 shadow-md animate-fade-slide-up"
+            style={{ animationDelay: '100ms' }}
+          >
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-red-500 mb-2">Session Terminated</h3>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              The interviewer ended this session early due to repeated unprofessional conduct.
+              In a real interview setting, this behavior would result in immediate disqualification.
+              Please reflect on your responses and try again with a professional approach.
+            </p>
+          </div>
+
+          <div className="animate-fade-slide-up flex flex-col sm:flex-row gap-3" style={{ animationDelay: '220ms' }}>
+            <button
+              onClick={onRestart}
+              className="btn-orange flex-1 py-3 rounded-xl font-semibold text-sm
+                         transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5
+                         active:translate-y-0 active:shadow-none"
+            >
+              Choose New Role →
+            </button>
+            <button
+              onClick={onRestartSameRole}
+              className="flex-1 bg-white/80 backdrop-blur-sm border border-[#FF9900] text-[#FF9900] font-semibold text-sm
+                         py-3 rounded-xl transition-all duration-200
+                         hover:bg-[#FF9900] hover:text-white hover:shadow-lg hover:-translate-y-0.5
+                         active:translate-y-0 active:shadow-none"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { summary, overall_summary, scores, strengths, improvements, practice_plan } = report;
+  const summaryText = overall_summary || summary;
   const scoreEntries = scores ? Object.entries(scores) : [];
 
   return (
@@ -126,13 +188,13 @@ export default function FinalReport({ report, role, onRestart, onRestartSameRole
         </div>
 
         {/* Summary */}
-        {overall_summary && (
+        {summaryText && (
           <div
             className="bg-white/80 backdrop-blur-sm border border-white rounded-2xl px-6 py-5 mb-5 shadow-md animate-fade-slide-up"
             style={{ animationDelay: '100ms' }}
           >
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-[#FF9900] mb-2">Summary</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">{overall_summary}</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{summaryText}</p>
           </div>
         )}
 
