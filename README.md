@@ -4,7 +4,6 @@ An AI-powered mock technical interview simulator built with **Amazon Nova** (via
 
 Devpost: https://devpost.com/software/interviewai-u7lvyx
 
-Built For the Amazon Nova Ai Hackathon
 ---
 
 ## Tech Stack
