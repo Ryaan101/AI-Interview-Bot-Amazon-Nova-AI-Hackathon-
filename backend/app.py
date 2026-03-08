@@ -4,6 +4,7 @@ import json
 import random
 import re
 from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -13,7 +14,6 @@ from services.nova_client import NovaClient
 from services.session_store import SessionStore
 
 app = FastAPI()
-load_dotenv()
 
 prompts = PromptLoader()
 nova = NovaClient()
