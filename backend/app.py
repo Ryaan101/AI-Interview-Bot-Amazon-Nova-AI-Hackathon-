@@ -422,12 +422,49 @@ def end(req: EndRequest):
     if not sess:
         raise HTTPException(status_code=404, detail="Unknown session_id")
 
+    # Count actual user responses (the first "user" message is the system-generated
+    # start prompt, not a real candidate answer)
+    user_turns = [m for m in sess["history"] if m["role"] == "user"]
+    real_responses = len(user_turns) - 1  # subtract the initial start prompt
+
+    if real_responses <= 0:
+        store.end(req.session_id)
+        return {
+            "end_interview": True,
+            "interviewer_message": "",
+            "next_question": "",
+            "no_responses": True,
+            "final_report": {
+                "overall_summary": "The interview ended before any responses were provided. No evaluation is available.",
+                "scores": {"clarity": 0, "structure": 0, "depth": 0, "relevance": 0, "confidence": 0},
+                "strengths": [],
+                "improvements": [],
+                "practice_plan": ["Complete at least one full interview session to receive actionable feedback."]
+            }
+        }
+
     system_text = build_system_prompt_for_session(req.session_id)
+
+    # Determine if the session had minimal effort (short/trivial answers)
+    user_messages = [m["text"] for m in sess["history"] if m["role"] == "user"][1:]  # skip start prompt
+    avg_len = sum(len(m.strip()) for m in user_messages) / max(len(user_messages), 1)
+    is_minimal = real_responses <= 2 and avg_len < 30
+
+    end_instruction = "The interview is now complete. Generate the final_report object and set end_interview=true."
+    if is_minimal:
+        end_instruction += (
+            " IMPORTANT: The candidate provided very few and/or extremely short responses "
+            "that did not demonstrate technical knowledge. Scores MUST reflect the actual "
+            "content provided — do NOT infer ability or give credit for what was not said. "
+            "If the candidate only gave greetings, single words, or trivially short non-answers, "
+            "all scores should be 1. Strengths should be empty or minimal. "
+            "Be honest and direct in the summary about the lack of substantive responses."
+        )
 
     # Ask model to generate final report based on the conversation
     messages = build_messages_for_turn(
         sess["history"],
-        "The interview is now complete. Generate the final_report object and set end_interview=true."
+        end_instruction
     )
 
     reply_text = nova.converse(system_text=system_text, messages=messages)

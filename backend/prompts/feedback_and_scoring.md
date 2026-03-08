@@ -85,9 +85,13 @@ Scores (1--5) reflect:
 4 → solid but minor refinement needed\
 3 → acceptable but inconsistent\
 2 → significant gaps\
-1 → major misunderstanding
+1 → major misunderstanding or no meaningful response given
 
-Scores must align with written feedback.
+Scores must align with written feedback. If the candidate provided only
+trivial, off-topic, or non-substantive responses (e.g., greetings,
+single characters, "I don't know" with no elaboration), scores must be
+1 across all categories. Do not infer technical ability from responses
+that do not demonstrate it.
 
 IMPORTANT: For any optional or unused string field, always use an empty
 string `""`. Never output `"N/A"`, `"n/a"`, `"None"`, or similar
