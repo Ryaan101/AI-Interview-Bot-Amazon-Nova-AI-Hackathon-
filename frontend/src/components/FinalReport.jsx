@@ -160,6 +160,7 @@ export default function FinalReport({ report, role, difficulty, conductTerminate
   const { summary, overall_summary, scores, strengths, improvements, practice_plan } = report;
   const summaryText = overall_summary || summary;
   const scoreEntries = scores ? Object.entries(scores) : [];
+  const noResponses = scoreEntries.length > 0 && scoreEntries.every(([, v]) => v === 0);
 
   return (
     <div
@@ -190,7 +191,7 @@ export default function FinalReport({ report, role, difficulty, conductTerminate
         </div>
 
         {/* Summary */}
-        {summaryText && (
+        {summaryText && !noResponses && (
           <div
             className="bg-white/80 backdrop-blur-sm border border-white rounded-2xl px-6 py-5 mb-5 shadow-md animate-fade-slide-up"
             style={{ animationDelay: '100ms' }}
@@ -200,8 +201,21 @@ export default function FinalReport({ report, role, difficulty, conductTerminate
           </div>
         )}
 
+        {/* No-responses notice */}
+        {noResponses && (
+          <div
+            className="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-5 mb-5 shadow-md animate-fade-slide-up"
+            style={{ animationDelay: '200ms' }}
+          >
+            <h3 className="text-[10px] font-semibold uppercase tracking-widest text-amber-600 mb-2">No Responses Provided</h3>
+            <p className="text-sm text-gray-700 leading-relaxed">
+              You ended the interview before providing any answers. Complete at least one full question to receive a detailed evaluation with scores and feedback.
+            </p>
+          </div>
+        )}
+
         {/* Circular scores */}
-        {scoreEntries.length > 0 && (
+        {scoreEntries.length > 0 && !noResponses && (
           <div
             className="bg-white/80 backdrop-blur-sm border border-white rounded-2xl px-6 py-7 mb-5 shadow-md animate-fade-slide-up"
             style={{ animationDelay: '200ms' }}
@@ -216,6 +230,7 @@ export default function FinalReport({ report, role, difficulty, conductTerminate
         )}
 
         {/* Strengths & improvements */}
+        {!noResponses && (
         <div className={`grid gap-4 mb-5 ${strengths?.length > 0 && improvements?.length > 0 ? 'sm:grid-cols-2' : 'grid-cols-1'}`}>
           {strengths?.length > 0 && (
             <div
@@ -236,9 +251,10 @@ export default function FinalReport({ report, role, difficulty, conductTerminate
             </div>
           )}
         </div>
+        )}
 
         {/* Practice plan */}
-        {practice_plan?.length > 0 && (
+        {practice_plan?.length > 0 && !noResponses && (
           <div
             className="bg-white/80 backdrop-blur-sm border border-white rounded-2xl px-5 py-5 mb-8 shadow-md animate-fade-slide-up"
             style={{ animationDelay: '580ms' }}
