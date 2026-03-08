@@ -2,6 +2,7 @@
 
 An AI-powered mock technical interview simulator built with **Amazon Nova** (via AWS Bedrock) and **FastAPI**. The bot conducts realistic software engineering interviews, asks follow-up questions, and generates a detailed feedback report at the end.
 
+https://devpost.com/software/interviewai-u7lvyx?ref_content=my-projects-tab&ref_feature=my_projects
 ---
 
 ## Tech Stack
