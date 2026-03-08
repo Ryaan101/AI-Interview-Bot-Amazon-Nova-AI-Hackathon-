@@ -89,6 +89,10 @@ Scores (1--5) reflect:
 
 Scores must align with written feedback.
 
+IMPORTANT: For any optional or unused string field, always use an empty
+string `""`. Never output `"N/A"`, `"n/a"`, `"None"`, or similar
+placeholder text.
+
 ------------------------------------------------------------------------
 
 ### Growth Focus

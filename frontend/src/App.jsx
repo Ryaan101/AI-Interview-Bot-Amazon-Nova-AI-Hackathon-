@@ -23,16 +23,16 @@ export default function App() {
   const addMessage = (role, text) =>
     setMessages((prev) => [...prev, { role, text }]);
 
-  const handleStart = async (selectedRole) => {
+  const handleStart = async (selectedRole, selectedDifficulty) => {
     setError(null);
     setLoading(true);
     try {
-      const data = await startInterview(selectedRole);
+      const data = await startInterview(selectedRole, selectedDifficulty);
       setRole(selectedRole);
       setSessionId(data.session_id);
       setAvatarSeeds([Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)]);
       const ai = data.ai;
-      const text = [ai.interviewer_message, ai.next_question].filter(Boolean).join('\n\n');
+      const text = [ai.interviewer_message, ai.next_question].filter(s => s && s !== 'N/A').join('\n\n');
       setMessages([{ role: 'assistant', text }]);
       // Play exit animation before switching phase
       setExitingSetup(true);
@@ -55,7 +55,7 @@ export default function App() {
     try {
       const data = await submitTurn(sessionId, text);
       const replyText = [data.interviewer_message, data.next_question]
-        .filter(Boolean)
+        .filter(s => s && s !== 'N/A')
         .join('\n\n');
 
       // Hold the typing indicator for a random natural-feeling delay (800–2200ms)
@@ -108,7 +108,7 @@ export default function App() {
     setMessages([]);
     setFinalReport(null);
     setError(null);
-    handleStart(currentRole);
+    handleStart(currentRole, 'junior');
   };
 
   if (phase === 'ended') {
