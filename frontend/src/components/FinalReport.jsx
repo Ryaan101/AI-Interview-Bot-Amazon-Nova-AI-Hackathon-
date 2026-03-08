@@ -155,7 +155,8 @@ export default function FinalReport({ report, role, conductTerminated, onRestart
     );
   }
 
-  const { overall_summary, scores, strengths, improvements, practice_plan } = report;
+  const { summary, overall_summary, scores, strengths, improvements, practice_plan } = report;
+  const summaryText = overall_summary || summary;
   const scoreEntries = scores ? Object.entries(scores) : [];
 
   return (
@@ -187,13 +188,13 @@ export default function FinalReport({ report, role, conductTerminated, onRestart
         </div>
 
         {/* Summary */}
-        {overall_summary && (
+        {summaryText && (
           <div
             className="bg-white/80 backdrop-blur-sm border border-white rounded-2xl px-6 py-5 mb-5 shadow-md animate-fade-slide-up"
             style={{ animationDelay: '100ms' }}
           >
             <h3 className="text-[10px] font-semibold uppercase tracking-widest text-[#FF9900] mb-2">Summary</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">{overall_summary}</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{summaryText}</p>
           </div>
         )}
 
