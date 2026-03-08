@@ -11,6 +11,7 @@ export default function App() {
   const [phase, setPhase] = useState('setup');
   const [exitingSetup, setExitingSetup] = useState(false);
   const [role, setRole] = useState('');
+  const [difficulty, setDifficulty] = useState('');
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
@@ -29,6 +30,7 @@ export default function App() {
     try {
       const data = await startInterview(selectedRole, selectedDifficulty);
       setRole(selectedRole);
+      setDifficulty(selectedDifficulty);
       setSessionId(data.session_id);
       setAvatarSeeds([Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)]);
       const ai = data.ai;
@@ -95,6 +97,7 @@ export default function App() {
   const handleRestart = () => {
     setPhase('setup');
     setRole('');
+    setDifficulty('');
     setSessionId(null);
     setMessages([]);
     setFinalReport(null);
@@ -112,7 +115,7 @@ export default function App() {
   };
 
   if (phase === 'ended') {
-    return <FinalReport report={finalReport} role={role} conductTerminated={conductTerminated} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
+    return <FinalReport report={finalReport} role={role} difficulty={difficulty} conductTerminated={conductTerminated} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
   }
 
   if (phase === 'setup') {
@@ -185,7 +188,7 @@ export default function App() {
             </div>
             <div className="leading-tight">
               <p className="text-xs font-semibold text-gray-800">AI Interview Bot</p>
-              <p className="text-[10px] text-gray-400">{role}</p>
+              <p className="text-[10px] text-gray-400">{difficulty === 'intern' ? `${role} Intern` : difficulty ? `${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} ${role}` : role}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">

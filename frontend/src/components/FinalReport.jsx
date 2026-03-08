@@ -91,8 +91,10 @@ function BulletList({ items, accent }) {
   );
 }
 
-export default function FinalReport({ report, role, conductTerminated, onRestart, onRestartSameRole }) {
+export default function FinalReport({ report, role, difficulty, conductTerminated, onRestart, onRestartSameRole }) {
   if (!report && !conductTerminated) return null;
+
+  const roleTitle = difficulty === 'intern' ? `${role} Intern` : difficulty ? `${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} ${role}` : role;
 
   // Conduct termination screen
   if (conductTerminated) {
@@ -116,7 +118,7 @@ export default function FinalReport({ report, role, conductTerminated, onRestart
               </svg>
             </div>
             <h2 className="text-3xl font-extrabold tracking-tight">Interview Ended Early</h2>
-            <p className="text-gray-500 text-sm mt-1">{role}</p>
+            <p className="text-gray-500 text-sm mt-1">{roleTitle}</p>
           </div>
 
           <div
@@ -184,7 +186,7 @@ export default function FinalReport({ report, role, conductTerminated, onRestart
             </svg>
           </div>
           <h2 className="text-3xl font-extrabold tracking-tight">Interview Complete</h2>
-          <p className="text-gray-500 text-sm mt-1">{role}</p>
+          <p className="text-gray-500 text-sm mt-1">{roleTitle}</p>
         </div>
 
         {/* Summary */}
