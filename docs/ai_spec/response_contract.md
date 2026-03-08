@@ -13,7 +13,8 @@ scoring, no coaching lecture).
 
 **next_question (string)**
 The next main question or a reframed version of the current question if
-the user is stuck.
+the user is stuck. Use an empty string `""` if the question is already
+included in interviewer_message. Never use "N/A".
 
 **follow_ups (string[], 0--2 items)**
 Optional. Include follow-ups only when: - the answer is too vague /

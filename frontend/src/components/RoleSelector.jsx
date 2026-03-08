@@ -100,12 +100,19 @@ function RoleDropdown({ value, onChange, disabled }) {
   );
 }
 
+const DIFFICULTIES = [
+  { value: 'intern', label: 'Intern', desc: 'Fundamentals & guided discussion' },
+  { value: 'junior', label: 'Junior', desc: 'Applied problems & moderate depth' },
+  { value: 'senior', label: 'Senior', desc: 'System design & deep tradeoffs' },
+];
+
 export default function RoleSelector({ onStart, loading }) {
   const [selected, setSelected] = useState('');
+  const [difficulty, setDifficulty] = useState('junior');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (selected && !loading) onStart(selected);
+    if (selected && !loading) onStart(selected, difficulty);
   };
 
   return (
@@ -201,6 +208,39 @@ export default function RoleSelector({ onStart, loading }) {
 
           {/* Custom dropdown */}
           <RoleDropdown value={selected} onChange={setSelected} disabled={loading} />
+
+          {/* Difficulty selector */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm font-semibold text-gray-700">
+              Difficulty level
+            </span>
+            <p className="text-xs text-gray-400">
+              Select the experience level to tailor your questions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            {DIFFICULTIES.map((d) => (
+              <button
+                key={d.value}
+                type="button"
+                disabled={loading}
+                onClick={() => setDifficulty(d.value)}
+                className={`flex flex-col items-center gap-0.5 px-2 py-2.5 rounded-xl border text-center
+                            transition-all duration-150 cursor-pointer
+                            disabled:opacity-50 disabled:cursor-not-allowed
+                            ${difficulty === d.value
+                              ? 'border-[#FF9900] bg-orange-50 ring-2 ring-[#FF9900]'
+                              : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+                            }`}
+              >
+                <span className={`text-sm font-semibold ${difficulty === d.value ? 'text-[#FF9900]' : 'text-gray-700'}`}>
+                  {d.label}
+                </span>
+                <span className="text-[10px] text-gray-400 leading-tight">{d.desc}</span>
+              </button>
+            ))}
+          </div>
 
           {/* CTA button */}
           <button

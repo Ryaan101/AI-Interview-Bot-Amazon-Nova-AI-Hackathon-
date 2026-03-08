@@ -13,6 +13,6 @@ async function request(path, body) {
   return res.json();
 }
 
-export const startInterview = (role) => request('/start', { role });
+export const startInterview = (role, difficulty) => request('/start', { role, difficulty });
 export const submitTurn = (session_id, text) => request('/turn', { session_id, text });
 export const endInterview = (session_id) => request('/end', { session_id });

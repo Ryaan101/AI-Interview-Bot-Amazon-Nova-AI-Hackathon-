@@ -11,6 +11,7 @@ export default function App() {
   const [phase, setPhase] = useState('setup');
   const [exitingSetup, setExitingSetup] = useState(false);
   const [role, setRole] = useState('');
+  const [difficulty, setDifficulty] = useState('');
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [finalReport, setFinalReport] = useState(null);
@@ -23,16 +24,17 @@ export default function App() {
   const addMessage = (role, text) =>
     setMessages((prev) => [...prev, { role, text }]);
 
-  const handleStart = async (selectedRole) => {
+  const handleStart = async (selectedRole, selectedDifficulty) => {
     setError(null);
     setLoading(true);
     try {
-      const data = await startInterview(selectedRole);
+      const data = await startInterview(selectedRole, selectedDifficulty);
       setRole(selectedRole);
+      setDifficulty(selectedDifficulty);
       setSessionId(data.session_id);
       setAvatarSeeds([Math.floor(Math.random() * 100000), Math.floor(Math.random() * 100000)]);
       const ai = data.ai;
-      const text = [ai.interviewer_message, ai.next_question].filter(Boolean).join('\n\n');
+      const text = [ai.interviewer_message, ai.next_question].filter(s => s && s !== 'N/A').join('\n\n');
       setMessages([{ role: 'assistant', text }]);
       // Play exit animation before switching phase
       setExitingSetup(true);
@@ -55,7 +57,7 @@ export default function App() {
     try {
       const data = await submitTurn(sessionId, text);
       const replyText = [data.interviewer_message, data.next_question]
-        .filter(Boolean)
+        .filter(s => s && s !== 'N/A')
         .join('\n\n');
 
       // Hold the typing indicator for a random natural-feeling delay (800–2200ms)
@@ -95,6 +97,7 @@ export default function App() {
   const handleRestart = () => {
     setPhase('setup');
     setRole('');
+    setDifficulty('');
     setSessionId(null);
     setMessages([]);
     setFinalReport(null);
@@ -108,11 +111,11 @@ export default function App() {
     setMessages([]);
     setFinalReport(null);
     setError(null);
-    handleStart(currentRole);
+    handleStart(currentRole, 'junior');
   };
 
   if (phase === 'ended') {
-    return <FinalReport report={finalReport} role={role} conductTerminated={conductTerminated} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
+    return <FinalReport report={finalReport} role={role} difficulty={difficulty} conductTerminated={conductTerminated} onRestart={handleRestart} onRestartSameRole={handleRestartSameRole} />;
   }
 
   if (phase === 'setup') {
@@ -185,7 +188,7 @@ export default function App() {
             </div>
             <div className="leading-tight">
               <p className="text-xs font-semibold text-gray-800">AI Interview Bot</p>
-              <p className="text-[10px] text-gray-400">{role}</p>
+              <p className="text-[10px] text-gray-400">{difficulty === 'intern' ? `${role} Intern` : difficulty ? `${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} ${role}` : role}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">

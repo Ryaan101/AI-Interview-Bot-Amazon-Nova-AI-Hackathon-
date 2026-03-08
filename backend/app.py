@@ -46,14 +46,19 @@ INTERVIEWER_NAMES = [
 ]
 
 
+VALID_DIFFICULTIES = {"intern", "junior", "senior"}
+
+
 def build_system_prompt_for_session(session_id: str) -> str:
     sess = store.get(session_id)
     company = sess.get("company_name", "Helix Technologies")
     interviewer = sess.get("interviewer_name", "Alex Chen")
+    difficulty = sess.get("difficulty", "junior")
     return (
         prompts.build_system_prompt()
         .replace("{{COMPANY_NAME}}", company)
         .replace("{{INTERVIEWER_NAME}}", interviewer)
+        .replace("{{DIFFICULTY}}", difficulty.capitalize())
     )
 
 
@@ -310,7 +315,8 @@ def build_messages_for_turn(history: list, new_user_text: str, soft_conduct_coun
 
 
 class StartRequest(BaseModel):
-    role: str 
+    role: str
+    difficulty: str = "junior"
 
 
 class TurnRequest(BaseModel):
@@ -329,12 +335,17 @@ def home():
 
 @app.post("/start")
 def start(req: StartRequest):
+    difficulty = req.difficulty.lower()
+    if difficulty not in VALID_DIFFICULTIES:
+        raise HTTPException(status_code=422, detail=f"Invalid difficulty. Must be one of: {', '.join(sorted(VALID_DIFFICULTIES))}")
+
     session_id = store.create_session()
     store.get(session_id)["company_name"] = random.choice(COMPANY_NAMES)
     store.get(session_id)["interviewer_name"] = random.choice(INTERVIEWER_NAMES)
+    store.get(session_id)["difficulty"] = difficulty
 
     system_text = build_system_prompt_for_session(session_id)
-    user_text = f"Start the interview for a {req.role}. Ask your warm-up question."
+    user_text = f"Start the interview for a {req.role} at the {difficulty} level. Ask your warm-up question."
 
     reply_text = nova.converse(system_text=system_text, user_text=user_text)
 
