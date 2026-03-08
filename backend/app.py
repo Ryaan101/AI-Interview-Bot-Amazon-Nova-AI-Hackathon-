@@ -1,6 +1,7 @@
 # backend/app.py
 
 import json
+import random
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -13,6 +14,43 @@ app = FastAPI()
 prompts = PromptLoader()
 nova = NovaClient()
 store = SessionStore()
+
+COMPANY_NAMES = [
+    "Helix Technologies",
+    "Ardent Systems",
+    "Crestline Software",
+    "Vantara Engineering",
+    "Stratum Labs",
+    "Nexbridge Solutions",
+    "Ironclad Digital",
+    "Parallax Tech",
+    "Nimbus Works",
+    "Solaris Engineering",
+]
+
+INTERVIEWER_NAMES = [
+    "Alex Chen",
+    "Jordan Rivera",
+    "Morgan Patel",
+    "Taylor Kim",
+    "Casey Okafor",
+    "Riley Nakamura",
+    "Drew Vasquez",
+    "Quinn Adeyemi",
+    "Avery Larsson",
+    "Blake Thornton",
+]
+
+
+def build_system_prompt_for_session(session_id: str) -> str:
+    sess = store.get(session_id)
+    company = sess.get("company_name", "Helix Technologies")
+    interviewer = sess.get("interviewer_name", "Alex Chen")
+    return (
+        prompts.build_system_prompt()
+        .replace("{{COMPANY_NAME}}", company)
+        .replace("{{INTERVIEWER_NAME}}", interviewer)
+    )
 
 
 def parse_model_json(reply_text: str) -> dict:
@@ -65,8 +103,10 @@ def home():
 @app.post("/start")
 def start(req: StartRequest):
     session_id = store.create_session()
+    store.get(session_id)["company_name"] = random.choice(COMPANY_NAMES)
+    store.get(session_id)["interviewer_name"] = random.choice(INTERVIEWER_NAMES)
 
-    system_text = prompts.build_system_prompt()
+    system_text = build_system_prompt_for_session(session_id)
     user_text = f"Start the interview for a {req.role}. Ask your warm-up question."
 
     reply_text = nova.converse(system_text=system_text, user_text=user_text)
@@ -91,7 +131,7 @@ def turn(req: TurnRequest):
     if sess.get("ended"):
         raise HTTPException(status_code=400, detail="Session already ended")
 
-    system_text = prompts.build_system_prompt()
+    system_text = build_system_prompt_for_session(req.session_id)
 
     # Build the next input using history
     user_text = build_user_text_for_turn(sess["history"], req.text)
@@ -120,7 +160,7 @@ def end(req: EndRequest):
     if not sess:
         raise HTTPException(status_code=404, detail="Unknown session_id")
 
-    system_text = prompts.build_system_prompt()
+    system_text = build_system_prompt_for_session(req.session_id)
 
     # Ask model to generate final report based on the conversation
     user_text = build_user_text_for_turn(
